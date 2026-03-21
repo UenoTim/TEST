@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>個人進度看板</title>
+    <style>
+        /* 簡單的開發者風格測試版 */
+        body { background-color: #1a1a1a; color: #eee; font-family: monospace; }
+        .card { 
+            border: 2px solid #444; padding: 10px; margin: 10px; 
+            border-radius: 5px; background: #2a2a2a; 
+        }
+        /* 緊急程度顏色 */
+        .priority-high { border-left: 10px solid #ff4d4d; }
+        .priority-medium { border-left: 10px solid #ffcc00; }
+        .priority-low { border-left: 10px solid #45f045; }
+        
+        .progress-bar { width: 100%; background: #444; height: 10px; border-radius: 5px; }
+        .progress-fill { height: 100%; background: #007bff; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h2>我的任務看板</h2>
+    <div id="task-container"></div>
+
+    <script>
+        // 模擬從 GitHub 抓下來的 JSON 資料
+        const taskData = [
+            { title: "中研院實習申請", priority: "high", start: "2026-03-15", progress: 60 },
+            { title: "碩考工程數學複習", priority: "medium", start: "2026-03-01", progress: 30 }
+        ];
+
+        function calculateDays(startDate) {
+            const start = new Date(startDate);
+            const today = new Date();
+            const diffTime = Math.abs(today - start);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        const container = document.getElementById('task-container');
+        taskData.forEach(task => {
+            const dayCount = calculateDays(task.start);
+            container.innerHTML += `
+                <div class="card priority-${task.priority}">
+                    <h3>${task.title}</h3>
+                    <p>已執行：${dayCount} 天</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${task.progress}%"></div>
+                    </div>
+                    <small>進度：${task.progress}%</small>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
