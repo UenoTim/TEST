@@ -52,5 +52,21 @@
             `;
         });
     </script>
+    <div style="background: #333; padding: 20px; margin: 10px; border-radius: 8px;">
+    <h3>快速新增任務</h3>
+    <input type="text" id="taskTitle" placeholder="要做什麼呢？" style="padding: 5px;">
+    
+    <select id="taskPriority" style="padding: 5px;">
+        <option value="high">緊急 (高)</option>
+        <option value="medium">普通 (中)</option>
+        <option value="low">不急 (低)</option>
+    </select>
+    
+    <input type="date" id="startDate" style="padding: 5px;">
+    
+    <button onclick="addNewTask()" style="padding: 5px 15px; cursor: pointer;">新增任務</button>
+</div>
+
+<div id="task-container"></div>
 </body>
 </html>
