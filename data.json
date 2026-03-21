@@ -1,6 +1,6 @@
 {
   "username": "你的名字",
   "tasks": [
-    { "title": "中研院實習文件", "priority": "high", "start": "2026-03-15", "progress": 60 }
+    { "title": "中研院實習", "priority": "high", "start": "2026-03-15", "progress": 60 }
   ]
 }
