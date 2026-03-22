@@ -35,14 +35,16 @@
 
     <div id="taskModal" class="modal">
         <div class="modal-content">
-            <h3>✨ 新增進度任務</h3>
-            <input type="text" id="taskTitle" placeholder="任務名稱 (如：碩考複習)">
+            <h3 id="modalTitle">✨ 新增進度任務</h3>
+            <input type="hidden" id="editTaskId"> 
+            
+            <input type="text" id="taskTitle" placeholder="任務名稱">
             
             <div class="form-group">
                 <label>執行者：</label>
                 <select id="taskUser">
                     <option value="曜廷">曜廷</option>
-                    <option value="德昇">德昇</option>
+                    <option value="同學">同學</option>
                 </select>
             </div>
     
@@ -55,6 +57,11 @@
                 </select>
             </div>
     
+            <div class="form-group" id="progressGroup" style="display:none;">
+                <label>目前進度：<span id="progressValue">0</span>%</label>
+                <input type="range" id="taskProgress" min="0" max="100" step="5" class="w-full" oninput="document.getElementById('progressValue').innerText=this.value">
+            </div>
+    
             <div class="form-group">
                 <label>開始日期：</label>
                 <input type="date" id="startDate">
@@ -62,7 +69,7 @@
     
             <div class="modal-buttons">
                 <button onclick="toggleModal()" style="background:#666;">取消</button>
-                <button onclick="handleSave()" style="background:#007bff;">儲存任務</button>
+                <button id="saveBtn" onclick="handleSave()" style="background:#007bff;">儲存任務</button>
             </div>
         </div>
     </div>
@@ -116,20 +123,20 @@
         .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 5px; color: white; cursor: pointer; }
     </style>
     <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  // 這裡貼上你在 Firebase 畫面看到的內容
-  const firebaseConfig = {
-    apiKey: "AIzaSyBO8HrPtilOHKyPoK8rQn6kPGRYQ5P1cf8",
-    authDomain: "test-2026-76f04.firebaseapp.com",
-    databaseURL: "https://test-2026-76f04-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "test-2026-76f04",
-    storageBucket: "test-2026-76f04.firebasestorage.app",
-    messagingSenderId: "323564170341",
-    appId: "1:323564170341:web:a0d62f9a8bef5e532faa8c",
-    measurementId: "G-CX05C0XH7F"
-  };
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    
+      // 這裡貼上你在 Firebase 畫面看到的內容
+      const firebaseConfig = {
+        apiKey: "AIzaSyBO8HrPtilOHKyPoK8rQn6kPGRYQ5P1cf8",
+        authDomain: "test-2026-76f04.firebaseapp.com",
+        databaseURL: "https://test-2026-76f04-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "test-2026-76f04",
+        storageBucket: "test-2026-76f04.firebasestorage.app",
+        messagingSenderId: "323564170341",
+        appId: "1:323564170341:web:a0d62f9a8bef5e532faa8c",
+        measurementId: "G-CX05C0XH7F"
+      };
 
   // 初始化 Firebase
   const app = initializeApp(firebaseConfig);
@@ -142,11 +149,60 @@
         modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
         document.getElementById('startDate').valueAsDate = new Date();
     };
+
+// 開啟視窗：如果是編輯模式，會帶入資料
+    window.openModal = function(id = null, taskData = null) {
+        const modal = document.getElementById('taskModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const progressGroup = document.getElementById('progressGroup');
+        
+        if (id) {
+            // 編輯模式
+            modalTitle.innerText = "✏️ 編輯任務進度";
+            progressGroup.style.display = "block";
+            document.getElementById('editTaskId').value = id;
+            document.getElementById('taskTitle').value = taskData.title;
+            document.getElementById('taskUser').value = taskData.user;
+            document.getElementById('taskPriority').value = taskData.priority;
+            document.getElementById('startDate').value = taskData.start;
+            document.getElementById('taskProgress').value = taskData.progress || 0;
+            document.getElementById('progressValue').innerText = taskData.progress || 0;
+        } else {
+            // 新增模式
+            modalTitle.innerText = "✨ 新增進度任務";
+            progressGroup.style.display = "none";
+            document.getElementById('editTaskId').value = "";
+            document.getElementById('taskTitle').value = "";
+            document.getElementById('startDate').valueAsDate = new Date();
+        }
+        modal.style.display = 'block';
+    };
     
+    window.toggleModal = () => document.getElementById('taskModal').style.display = 'none';
+
+// 統一儲存入口
     window.handleSave = function() {
-        window.addNewTask(); // 確保你腳本裡有定義這個新增到 Firebase 的函數
-        window.toggleModal(); 
-            };
+        const id = document.getElementById('editTaskId').value;
+        const taskData = {
+            title: document.getElementById('taskTitle').value,
+            user: document.getElementById('taskUser').value,
+            priority: document.getElementById('taskPriority').value,
+            start: document.getElementById('startDate').value,
+            progress: parseInt(document.getElementById('taskProgress').value) || 0
+        };
+    
+        if (!taskData.title) return alert("請輸入名稱");
+    
+        if (id) {
+            // 更新資料
+            update(ref(db, `tasks/${id}`), taskData);
+        } else {
+            // 新增資料
+            push(dbRef, { ...taskData, timestamp: Date.now() });
+        }
+        toggleModal();
+    };
+
   // 1. 新增任務到雲端
   window.addNewTask = function() {
       const title = document.getElementById('taskTitle').value;
@@ -167,6 +223,12 @@
       
       document.getElementById('taskTitle').value = ""; // 清空輸入框
   };
+// 刪除功能
+    window.deleteTask = function(id) {
+        if (confirm("確定要刪除這個任務嗎？")) {
+            remove(ref(db, `tasks/${id}`));
+        }
+    };
 
     // 1. 監聽雲端資料：只要資料一變動，這裡就會自動執行
     onValue(dbRef, (snapshot) => {
@@ -183,7 +245,7 @@
                 const days = calculateDays(task.start);
                 
                 // 呼叫渲染函式
-                renderCard(container, task, days);
+                renderCard(container, task, days,key);
             });
         } else {
             container.innerHTML = "<p style='color:gray;'>目前沒有任務，點擊右下角加號新增吧！</p>";
@@ -229,6 +291,10 @@ updateAllCountdowns();
 
     const cardHtml = `
         <div class="bg-white rounded-2xl shadow-sm border border-slate-300 mb-4 overflow-hidden transition-all hover:shadow-md">
+            <div class="absolute top-3 right-3 flex gap-2">
+                <button onclick='openModal("${id}", ${JSON.stringify(task)})' class="text-slate-400 hover:text-blue-500 text-xs">✏️</button>
+                <button onclick='deleteTask("${id}")' class="text-slate-400 hover:text-rose-500 text-xs">🗑️</button>
+            </div>
             <div class="px-5 py-3 flex justify-between items-center ${titleColor}">
                 <span class="text-[14px] font-bold uppercase tracking-wider text-slate-900">${task.priority.toUpperCase()} PRIORITY</span>
                 <span class="px-2 py-1 bg-white text-slate-500 rounded-md text-[10px] font-bold border border-slate-200 shadow-sm">
