@@ -23,54 +23,48 @@
 <body>
     <nav class="sticky top-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 overflow-hidden border-b border-slate-200">
         <div class="flex py-3 px-4 gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-            <a href="#day1" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-200 transition-all shrink-0">1/28</a> 
-            <a href="#day2" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">1/29</a>
-            <a href="#day3" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">1/30</a>
-            <a href="#day4" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">1/31</a>
-            <a href="#day5" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/1</a>
-            <a href="#day6" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/2</a>
-            <a href="#day7" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/3</a>
-            <a href="#day8" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/4</a>
-            <a href="#day9" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/5</a>
-            <a href="#day10" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/6</a>
+            <a href="#Tim" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-200 transition-all shrink-0">曜</a> 
+            <a href="#Dexter" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
         </div>
     </nav>
-    <style>
-        <button id="fab" onclick="toggleModal()">+</button>
 
-<div id="taskModal" class="modal">
-    <div class="modal-content">
-        <h3>✨ 新增進度任務</h3>
-        <input type="text" id="taskTitle" placeholder="任務名稱 (如：碩考複習)">
-        
-        <div class="form-group">
-            <label>執行者：</label>
-            <select id="taskUser">
-                <option value="曜廷">曜廷</option>
-                <option value="同學">同學</option>
-            </select>
-        </div>
+    <button id="fab" onclick="toggleModal()">+</button>
 
-        <div class="form-group">
-            <label>緊急程度：</label>
-            <select id="taskPriority">
-                <option value="high">🔴 高 (High)</option>
-                <option value="medium">🟡 中 (Medium)</option>
-                <option value="low">🟢 低 (Low)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>開始日期：</label>
-            <input type="date" id="startDate">
-        </div>
-
-        <div class="modal-buttons">
-            <button onclick="toggleModal()" style="background:#666;">取消</button>
-            <button onclick="handleSave()" style="background:#007bff;">儲存任務</button>
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h3>✨ 新增進度任務</h3>
+            <input type="text" id="taskTitle" placeholder="任務名稱 (如：碩考複習)">
+            
+            <div class="form-group">
+                <label>執行者：</label>
+                <select id="taskUser">
+                    <option value="曜廷">曜廷</option>
+                    <option value="同學">同學</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label>緊急程度：</label>
+                <select id="taskPriority">
+                    <option value="high">🔴 高 (High)</option>
+                    <option value="medium">🟡 中 (Medium)</option>
+                    <option value="low">🟢 低 (Low)</option>
+                </select>
+            </div>
+    
+            <div class="form-group">
+                <label>開始日期：</label>
+                <input type="date" id="startDate">
+            </div>
+    
+            <div class="modal-buttons">
+                <button onclick="toggleModal()" style="background:#666;">取消</button>
+                <button onclick="handleSave()" style="background:#007bff;">儲存任務</button>
+            </div>
         </div>
     </div>
-</div>
+
+    <style>
         /* 右下角加號按鈕 */
         #fab {
             position: fixed;
@@ -92,11 +86,11 @@
         
         /* 彈出視窗背景 */
         .modal {
-            display: none; /* 平常隱藏 */
+            display: none; 
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+            backdrop-filter: blur(5px);
             z-index: 1000;
         }
         
@@ -109,10 +103,12 @@
             padding: 25px;
             border-radius: 15px;
             color: white;
+            font-family: sans-serif;
         }
         
         .form-group { margin: 15px 0; }
-        input, select { width: 100%; padding: 10px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; box-sizing: border-box; }
         .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 5px; color: white; cursor: pointer; }
     </style>
