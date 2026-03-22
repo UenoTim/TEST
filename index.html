@@ -44,7 +44,7 @@
                 <label>執行者：</label>
                 <select id="taskUser">
                     <option value="曜廷">曜廷</option>
-                    <option value="同學">同學</option>
+                    <option value="德昇">德昇</option>
                 </select>
             </div>
     
@@ -282,7 +282,7 @@
 
         
     // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
-    function renderCard(container, task, days,id) {
+    function renderCard(container, task, days, id) {
     // 根據緊急程度決定標題顏色
     const titleColor = task.priority === 'high' ? 'bg-rose-400' : 
                       task.priority === 'medium' ? 'bg-amber-400' : 'bg-emerald-400';
