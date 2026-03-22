@@ -2,14 +2,15 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>個人進度看板</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>目標:考研!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 簡單的開發者風格測試版 */
-        body { background-color: #1a1a1a; color: #eee; font-family: monospace; }
-        .card { 
-            border: 2px solid #444; padding: 10px; margin: 10px; 
-            border-radius: 5px; background: #2a2a2a; 
-        }
+        html { scroll-behavior: smooth; }
+        section {
+        scroll-margin-top: 40px;
+    }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
         /* 緊急程度顏色 */
         .priority-high { border-left: 10px solid #ff4d4d; }
         .priority-medium { border-left: 10px solid #ffcc00; }
