@@ -23,8 +23,8 @@
 <body>
     <nav class="sticky top-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 overflow-hidden border-b border-slate-200">
         <div class="flex py-3 px-4 gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-            <h1 class="px-5 py-2 bg-rose-300 text-slate-600 rounded-xl text-m font-black border border-slate-200 transition-all shrink-0">考研倒數 <span id="countdown-days" class="text-rose-600" data-date="2027-01-31T00:00:00"></span> ✈️</h1>
-            <h1 class="px-5 py-2 bg-amber-300 text-slate-600 rounded-xl text-m font-black border border-slate-200 transition-all shrink-0">114-2倒數 <span id="countdown-days" class="text-amber-600" data-date="2027-01-31T00:00:00"></span> ✈️</h1>
+            <h1 class="px-5 py-2 bg-rose-300 text-slate-600 rounded-xl text-m font-black border border-slate-200 transition-all shrink-0">考研倒數 <span class="countdown-tag text-rose-600" data-date="2027-01-31T00:00:00"></span> ✈️</h1>
+            <h1 class="px-5 py-2 bg-amber-300 text-slate-600 rounded-xl text-m font-black border border-slate-200 transition-all shrink-0">114-2倒數 <span class="countdown-tag text-amber-600" data-date="2027-01-31T00:00:00"></span> ✈️</h1>
         </div>
     </nav>
     <main class="p-4 max-w-md mx-auto">
@@ -191,28 +191,32 @@
     });
 
     // --- 4. 碩考倒數計時器 ---
-    function updateCountdown() {
-        const display = document.getElementById('countdown-days');
-        
-        // 從 HTML 的 data-date 屬性讀取日期字串
-        const endDate = display.getAttribute('data-date'); 
-        
-        if (!endDate) return; // 如果沒設定日期就跳出
-    
-        const examDate = new Date(endDate).getTime();
+    function updateAllCountdowns() {
+    // 找出頁面上所有帶有這個 class 的標籤
+    const tags = document.querySelectorAll('.countdown-tag');
+
+    tags.forEach(tag => {
+        const endDateStr = tag.getAttribute('data-date');
+        if (!endDateStr) return;
+
+        const endDate = new Date(endDateStr).getTime();
         const now = new Date().getTime();
-        const distance = examDate - now;
-    
+        const distance = endDate - now;
+
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    
+
         if (days > 0) {
-            display.innerText = days + " 天";
+            tag.innerText = days + " 天";
         } else if (days === 0) {
-            display.innerText = "就是今天！";
+            tag.innerText = "就是今天！";
         } else {
-            display.innerText = "結束啦";
+            tag.innerText = "已結束";
         }
-    }
+    });
+}
+
+// 執行
+updateAllCountdowns();
 
     // 立即執行
         updateCountdown();
