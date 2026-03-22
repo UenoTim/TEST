@@ -23,8 +23,8 @@
 <body>
     <nav class="sticky top-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 overflow-hidden border-b border-slate-200">
         <div class="flex py-3 px-4 gap-2 overflow-x-auto no-scrollbar scroll-smooth">
-            <a href="#Tim" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-200 transition-all shrink-0">曜</a> 
-            <a href="#Dexter" class="px-5 py-2 bg-blue-600 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
+            <a href="#Tim" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold shadow-md shadow-blue-200 transition-all shrink-0">曜</a> 
+            <a href="#Dexter" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
             <h1 class="px-5 py-2 bg-rose-500 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">倒數...天</h1>
         </div>
     </nav>
@@ -199,7 +199,7 @@
 
     const cardHtml = `
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-4 overflow-hidden transition-all hover:shadow-md">
-            <div class="px-5 py-3 flex justify-between items-center bg-${titleColor}">
+            <div class="px-5 py-3 flex justify-between items-center ${titleColor}">
                 <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${task.priority.toUpperCase()} PRIORITY</span>
                 <span class="px-2 py-1 bg-white text-slate-500 rounded-md text-[10px] font-bold border border-slate-200 shadow-sm">
                     👤 ${task.user}
