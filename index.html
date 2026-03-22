@@ -283,43 +283,45 @@
         
     // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
     function renderCard(container, task, days, id) {
-    // 根據緊急程度決定標題顏色
-    const titleColor = task.priority === 'high' ? 'bg-rose-400' : 
-                      task.priority === 'medium' ? 'bg-amber-400' : 'bg-emerald-400';
-
-    const cardHtml = `
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-300 mb-4 overflow-hidden transition-all hover:shadow-md">
-            <div class="absolute top-3 right-3 flex gap-2">
-                <button onclick='openModal("${id}", ${JSON.stringify(task)})' class="text-slate-400 hover:text-blue-500 text-xs">✏️</button>
-                <button onclick='deleteTask("${id}")' class="text-slate-400 hover:text-rose-500 text-xs">🗑️</button>
-            </div>
-            <div class="px-5 py-3 flex justify-between items-center ${titleColor}">
-                <span class="text-[14px] font-bold uppercase tracking-wider text-slate-900">${task.priority.toUpperCase()} PRIORITY</span>
-                <span class="px-2 py-1 bg-white text-slate-500 rounded-md text-[10px] font-bold border border-slate-200 shadow-sm">
-                    👤 ${task.user}
-                </span>
-            </div>
-
-            <div class="px-5 pb-5 text-sm text-slate-600 border-t border-slate-50">
-                
-                <h3 class="text-base font-black text-slate-800 mb-3 mt-4 pl-3 border-l-2 border-slate-200 px">
-                    ${task.title}
-                </h3>
-
-                <div class="flex items-center justify-between mb-2 px-1">
-                    <span class="text-xs font-medium text-slate-500">🔥 已衝刺 ${days} 天</span>
-                    <span class="text-xs font-bold text-blue-600">${task.progress || 0}%</span>
+        const titleColor = task.priority === 'high' ? 'bg-rose-400' : 
+                          task.priority === 'medium' ? 'bg-amber-400' : 'bg-emerald-400';
+    
+        // 修正點 1: 使用更安全的方式傳遞資料，避免 JSON 字串在 HTML 中破裂
+        const cardHtml = `
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-300 mb-4 overflow-hidden transition-all hover:shadow-md relative">
+                <div class="absolute top-3 right-3 flex gap-2 z-10">
+                    <button id="edit-${id}" class="text-slate-400 hover:text-blue-500 text-xs p-1">✏️</button>
+                    <button id="del-${id}" class="text-slate-400 hover:text-rose-500 text-xs p-1">🗑️</button>
                 </div>
-
-                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div class="bg-blue-500 h-full rounded-full transition-all duration-500" 
-                         style="width: ${task.progress || 0}%">
+    
+                <div class="px-5 py-3 flex justify-between items-center ${titleColor}">
+                    <span class="text-[14px] font-bold uppercase tracking-wider text-slate-900">${task.priority.toUpperCase()} PRIORITY</span>
+                    <span class="px-2 py-1 bg-white text-slate-500 rounded-md text-[10px] font-bold border border-slate-200 shadow-sm">
+                        👤 ${task.user}
+                    </span>
+                </div>
+    
+                <div class="px-5 pb-5 text-sm text-slate-600 border-t border-slate-50">
+                    <h3 class="text-base font-black text-slate-800 mb-3 mt-4 pl-3 border-l-2 border-slate-200">
+                        ${task.title}
+                    </h3>
+                    <div class="flex items-center justify-between mb-2 px-1">
+                        <span class="text-xs font-medium text-slate-500">🔥 已衝刺 ${days} 天</span>
+                        <span class="text-xs font-bold text-blue-600">${task.progress || 0}%</span>
+                    </div>
+                    <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div class="bg-blue-500 h-full rounded-full transition-all duration-500" 
+                             style="width: ${task.progress || 0}%">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    `;
-    container.insertAdjacentHTML('beforeend', cardHtml);
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+    
+        // 修正點 3: 使用監聽器取代 HTML 內的 onclick，這樣最穩
+        document.getElementById(`edit-${id}`).addEventListener('click', () => openModal(id, task));
+        document.getElementById(`del-${id}`).addEventListener('click', () => deleteTask(id));
     }
     
     // 3. 輔助工具：根據緊急程度給顏色
