@@ -194,8 +194,8 @@
     // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
     function renderCard(container, task, days) {
     // 根據緊急程度決定標題顏色
-    const titleColor = task.priority === 'high' ? 'text-rose-700' : 
-                      task.priority === 'medium' ? 'text-amber-600' : 'text-emerald-600';
+    const titleColor = task.priority === 'high' ? 'bg-rose-700' : 
+                      task.priority === 'medium' ? 'bg-amber-600' : 'bg-emerald-600';
 
     const cardHtml = `
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-4 overflow-hidden transition-all hover:shadow-md">
