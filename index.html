@@ -194,23 +194,19 @@
     // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
     function renderCard(container, task, days) {
     // 根據緊急程度決定標題顏色
-    const titleColor = task.priority === 'high' ? 'bg-rose-700' : 
-                      task.priority === 'medium' ? 'bg-amber-600' : 'bg-emerald-600';
+    const titleColor = task.priority === 'high' ? 'bg-rose-500' : 
+                      task.priority === 'medium' ? 'bg-amber-500' : 'bg-emerald-500';
 
     const cardHtml = `
         <div class="bg-white rounded-2xl shadow-sm border border-slate-100 mb-4 overflow-hidden transition-all hover:shadow-md">
             <div class="px-5 py-3 flex justify-between items-center ${titleColor}">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">${task.priority.toUpperCase()} PRIORITY</span>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-slate-900">${task.priority.toUpperCase()} PRIORITY</span>
                 <span class="px-2 py-1 bg-white text-slate-500 rounded-md text-[10px] font-bold border border-slate-200 shadow-sm">
                     👤 ${task.user}
                 </span>
             </div>
 
             <div class="px-5 pb-5 text-sm text-slate-600 border-t border-slate-50">
-                <h4 class="font-bold ${titleColor} mb-2 pt-3 flex items-center gap-1">
-                    <span class="w-2 h-2 rounded-full bg-current"></span>
-                    ${task.priority.toUpperCase()} PRIORITY
-                </h4>
                 
                 <h3 class="text-base font-bold text-slate-800 mb-3 pl-3 border-l-2 border-slate-200">
                     ${task.title}
