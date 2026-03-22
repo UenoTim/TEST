@@ -165,39 +165,59 @@
       document.getElementById('taskTitle').value = ""; // 清空輸入框
   };
 
-  // 2. 監聽雲端資料並更新畫面
-  onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      const container = document.getElementById('task-container');
-      container.innerHTML = ""; // 先清空舊畫面
-
-      if (data) {
-          Object.values(data).forEach(task => {
-              const days = calculateDays(task.start);
-              renderCard(task, days);
-          });
-      }
-  });
-
-  // 計算天數的輔助函式
-  function calculateDays(startDate) {
-      const start = new Date(startDate);
-      const today = new Date();
-      const diff = Math.abs(today - start);
-      return Math.ceil(diff / (1000 * 60 * 60 * 24));
-  }
-
-  // 渲染卡片的輔助函式
-  function renderCard(task, days) {
-      const container = document.getElementById('task-container');
-      container.innerHTML += `
-          <div class="card priority-${task.priority}">
-              <strong>[${task.user}]</strong> ${task.title}
-              <p>⏱️ 已執行 ${days} 天</p>
-              <div class="progress-bar"><div class="progress-fill" style="width:${task.progress}%"></div></div>
-          </div>
-      `;
-  }
+    // 1. 監聽雲端資料：只要資料一變動，這裡就會自動執行
+    onValue(dbRef, (snapshot) => {
+        const data = snapshot.val();
+        const container = document.getElementById('task-container');
+        
+        // 重要：先清空舊的內容，不然會重複出現
+        container.innerHTML = ""; 
+    
+        if (data) {
+            // 將 Firebase 的物件轉換成陣列並跑迴圈
+            Object.keys(data).forEach(key => {
+                const task = data[key];
+                const days = calculateDays(task.start);
+                
+                // 呼叫渲染函式
+                renderCard(container, task, days);
+            });
+        } else {
+            container.innerHTML = "<p style='color:gray;'>目前沒有任務，點擊右下角加號新增吧！</p>";
+        }
+    });
+    
+    // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
+    function renderCard(container, task, days) {
+        const cardHtml = `
+            <div class="card priority-${task.priority}" style="margin-bottom: 15px; padding: 15px; background: #2a2a2a; border-radius: 10px; border-left: 5px solid ${getPriorityColor(task.priority)};">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <h4 style="margin: 0; color: white;">${task.title}</h4>
+                    <span style="font-size: 10px; background: #444; padding: 2px 6px; border-radius: 4px;">${task.user}</span>
+                </div>
+                <p style="font-size: 13px; color: #aaa; margin: 10px 0;">📅 已執行 ${days} 天</p>
+                <div style="width: 100%; background: #444; height: 6px; border-radius: 3px;">
+                    <div style="width: ${task.progress || 0}%; background: #007bff; height: 100%; border-radius: 3px;"></div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', cardHtml);
+    }
+    
+    // 3. 輔助工具：根據緊急程度給顏色
+    function getPriorityColor(p) {
+        if (p === 'high') return '#ff4d4d';
+        if (p === 'medium') return '#ffcc00';
+        return '#45f045';
+    }
+    
+    // 4. 計算天數 (確保沒壞掉)
+    function calculateDays(startDate) {
+        const start = new Date(startDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - start);
+        return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    }
 </script>
 </body>
 </html>
