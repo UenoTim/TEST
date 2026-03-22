@@ -134,7 +134,16 @@
   const dbRef = ref(db, 'tasks');
 
   // --- 接下來是邏輯部分 ---
-
+    window.toggleModal = function() {
+        const modal = document.getElementById('taskModal');
+        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        document.getElementById('startDate').valueAsDate = new Date();
+    };
+    
+    window.handleSave = function() {
+        window.addNewTask(); // 確保你腳本裡有定義這個新增到 Firebase 的函數
+        window.toggleModal(); 
+            };
   // 1. 新增任務到雲端
   window.addNewTask = function() {
       const title = document.getElementById('taskTitle').value;
@@ -189,35 +198,6 @@
           </div>
       `;
   }
-    // 切換彈出視窗開關
-  function toggleModal() {
-        const modal = document.getElementById('taskModal');
-        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-        // 每次打開預設日期為今天
-        document.getElementById('startDate').valueAsDate = new Date();
-  }
-
-// 點擊「儲存」時呼叫你原本的 Firebase push 邏輯
-  function handleSave() {
-        window.addNewTask(); // 呼叫你原本寫在 Firebase 那邊的 function
-        toggleModal(); // 存完後關閉視窗
-  }
 </script>
-    <div style="background: #333; padding: 20px; margin: 10px; border-radius: 8px;">
-    <h3>快速新增任務</h3>
-    <input type="text" id="taskTitle" placeholder="要做什麼呢？" style="padding: 5px;">
-    
-    <select id="taskPriority" style="padding: 5px;">
-        <option value="high">緊急 (高)</option>
-        <option value="medium">普通 (中)</option>
-        <option value="low">不急 (低)</option>
-    </select>
-    
-    <input type="date" id="startDate" style="padding: 5px;">
-    
-    <button onclick="addNewTask()" style="padding: 5px 15px; cursor: pointer;">新增任務</button>
-</div>
-
-<div id="task-container"></div>
 </body>
 </html>
