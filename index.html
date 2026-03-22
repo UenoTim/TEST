@@ -24,8 +24,8 @@
     <nav class="sticky top-0 bg-white/90 backdrop-blur-sm shadow-sm z-50 overflow-hidden border-b border-slate-200">
         <div class="flex py-3 px-4 gap-2 overflow-x-auto no-scrollbar scroll-smooth">
             <a href="#Tim" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-200 transition-all shrink-0">曜</a> 
-            <a href="#Dexter" class="px-5 py-2 bg-rose-500 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
-            <h1 class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">倒數...天</h1>
+            <a href="#Dexter" class="px-5 py-2 bg-blue-600 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
+            <h1 class="px-5 py-2 bg-rose-500 text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">倒數...天</h1>
         </div>
     </nav>
     <main class="p-4 max-w-md mx-auto">
@@ -246,6 +246,46 @@
         const diffTime = Math.abs(today - start);
         return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
+
+    const navLinks = document.querySelectorAll('nav a');
+    const sections = document.querySelectorAll('section[id]');
+    const navContainer = document.querySelector('nav div');
+
+            // 1. 處理滾動監聽邏輯
+            const observerOptions = {
+                root: null,
+                rootMargin: '-20% 0px -70% 0px', // 觸發範圍：當區塊進入畫面中上方時
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        navLinks.forEach(link => {
+                            // 移除所有按鈕的啟動樣式
+                            link.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-200');
+                            link.classList.add('bg-white', 'text-slate-600', 'border-slate-200');
+
+                            // 幫對應的按鈕加上啟動樣式
+                            if (link.getAttribute('href') === `#${id}`) {
+                                link.classList.remove('bg-white', 'text-slate-600', 'border-slate-200');
+                                link.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-200');
+                                
+                                // 自動捲動上方導航列，讓當前按鈕保持在中間
+                                link.scrollIntoView({
+                                    behavior: 'smooth',
+                                    inline: 'center',
+                                    block: 'nearest'
+                                });
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => observer.observe(section));
 </script>
 </body>
 </html>
