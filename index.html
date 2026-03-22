@@ -124,7 +124,7 @@
     </style>
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+      import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
     
       // 這裡貼上你在 Firebase 畫面看到的內容
       const firebaseConfig = {
@@ -245,7 +245,7 @@
                 const days = calculateDays(task.start);
                 
                 // 呼叫渲染函式
-                renderCard(container, task, days,key);
+                renderCard(container, task, days, key);
             });
         } else {
             container.innerHTML = "<p style='color:gray;'>目前沒有任務，點擊右下角加號新增吧！</p>";
@@ -278,13 +278,11 @@
 }
 
 // 執行
-updateAllCountdowns();
+    updateAllCountdowns();
 
-    // 立即執行
-        updateCountdown();
         
     // 2. 渲染卡片的輔助函式 (確保這裡的 HTML 結構是你想要的)
-    function renderCard(container, task, days) {
+    function renderCard(container, task, days,id) {
     // 根據緊急程度決定標題顏色
     const titleColor = task.priority === 'high' ? 'bg-rose-400' : 
                       task.priority === 'medium' ? 'bg-amber-400' : 'bg-emerald-400';
