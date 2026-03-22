@@ -27,7 +27,10 @@
             <a href="#Dexter" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">德</a>
         </div>
     </nav>
-    <div id="task-container" class="p-4"></div>
+    <main class="p-4 max-w-md mx-auto">
+        <div id="task-container">
+            </div>
+    </main>
     <button id="fab" onclick="toggleModal()">+</button>
 
     <div id="taskModal" class="modal">
@@ -149,7 +152,7 @@
       const title = document.getElementById('taskTitle').value;
       const priority = document.getElementById('taskPriority').value;
       const start = document.getElementById('startDate').value;
-      const user = "曜廷"; // 你可以先寫死，或是之後做個切換紐
+      const user = document.getElementById('taskUser').value;
 
       if (!title) return alert("請輸入任務！");
 
