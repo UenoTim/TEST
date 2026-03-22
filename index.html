@@ -23,35 +23,84 @@
     <h2>我的任務看板</h2>
     <div id="task-container"></div>
 
-    <script>
-        // 模擬從 GitHub 抓下來的 JSON 資料
-        const taskData = [
-            { title: "中研院實習申請", priority: "high", start: "2026-03-15", progress: 60 },
-            { title: "碩考工程數學複習", priority: "medium", start: "2026-03-01", progress: 30 }
-        ];
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        function calculateDays(startDate) {
-            const start = new Date(startDate);
-            const today = new Date();
-            const diffTime = Math.abs(today - start);
-            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        }
+  // 這裡貼上你在 Firebase 畫面看到的內容
+  const firebaseConfig = {
+    apiKey: "AIzaSyBO8HrPtilOHKyPoK8rQn6kPGRYQ5P1cf8",
+    authDomain: "test-2026-76f04.firebaseapp.com",
+    databaseURL: "https://test-2026-76f04-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "test-2026-76f04",
+    storageBucket: "test-2026-76f04.firebasestorage.app",
+    messagingSenderId: "323564170341",
+    appId: "1:323564170341:web:a0d62f9a8bef5e532faa8c",
+    measurementId: "G-CX05C0XH7F"
+  };
 
-        const container = document.getElementById('task-container');
-        taskData.forEach(task => {
-            const dayCount = calculateDays(task.start);
-            container.innerHTML += `
-                <div class="card priority-${task.priority}">
-                    <h3>${task.title}</h3>
-                    <p>已執行：${dayCount} 天</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${task.progress}%"></div>
-                    </div>
-                    <small>進度：${task.progress}%</small>
-                </div>
-            `;
-        });
-    </script>
+  // 初始化 Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const dbRef = ref(db, 'tasks');
+
+  // --- 接下來是邏輯部分 ---
+
+  // 1. 新增任務到雲端
+  window.addNewTask = function() {
+      const title = document.getElementById('taskTitle').value;
+      const priority = document.getElementById('taskPriority').value;
+      const start = document.getElementById('startDate').value;
+      const user = "曜廷"; // 你可以先寫死，或是之後做個切換紐
+
+      if (!title) return alert("請輸入任務！");
+
+      push(dbRef, {
+          user: user,
+          title: title,
+          priority: priority,
+          start: start,
+          progress: 0,
+          timestamp: Date.now()
+      });
+      
+      document.getElementById('taskTitle').value = ""; // 清空輸入框
+  };
+
+  // 2. 監聽雲端資料並更新畫面
+  onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      const container = document.getElementById('task-container');
+      container.innerHTML = ""; // 先清空舊畫面
+
+      if (data) {
+          Object.values(data).forEach(task => {
+              const days = calculateDays(task.start);
+              renderCard(task, days);
+          });
+      }
+  });
+
+  // 計算天數的輔助函式
+  function calculateDays(startDate) {
+      const start = new Date(startDate);
+      const today = new Date();
+      const diff = Math.abs(today - start);
+      return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
+  // 渲染卡片的輔助函式
+  function renderCard(task, days) {
+      const container = document.getElementById('task-container');
+      container.innerHTML += `
+          <div class="card priority-${task.priority}">
+              <strong>[${task.user}]</strong> ${task.title}
+              <p>⏱️ 已執行 ${days} 天</p>
+              <div class="progress-bar"><div class="progress-fill" style="width:${task.progress}%"></div></div>
+          </div>
+      `;
+  }
+</script>
     <div style="background: #333; padding: 20px; margin: 10px; border-radius: 8px;">
     <h3>快速新增任務</h3>
     <input type="text" id="taskTitle" placeholder="要做什麼呢？" style="padding: 5px;">
