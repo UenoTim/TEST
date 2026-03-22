@@ -143,11 +143,15 @@
   const db = getDatabase(app);
   const dbRef = ref(db, 'tasks');
 
-  // --- 接下來是邏輯部分 ---
+    // 修正：確保全域都能抓到 toggleModal
     window.toggleModal = function() {
         const modal = document.getElementById('taskModal');
-        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-        document.getElementById('startDate').valueAsDate = new Date();
+        // 如果是打開，就順便重設成「新增模式」
+        if (modal.style.display !== 'block') {
+            window.openModal(); // 呼叫下面那個 openModal
+        } else {
+            modal.style.display = 'none';
+        }
     };
 
 // 開啟視窗：如果是編輯模式，會帶入資料
@@ -183,24 +187,31 @@
 // 統一儲存入口
     window.handleSave = function() {
         const id = document.getElementById('editTaskId').value;
+        const title = document.getElementById('taskTitle').value;
+        const user = document.getElementById('taskUser').value;
+        const priority = document.getElementById('taskPriority').value;
+        const start = document.getElementById('startDate').value;
+        const progress = parseInt(document.getElementById('taskProgress').value) || 0;
+    
+        if (!title) return alert("請輸入名稱");
+    
         const taskData = {
-            title: document.getElementById('taskTitle').value,
-            user: document.getElementById('taskUser').value,
-            priority: document.getElementById('taskPriority').value,
-            start: document.getElementById('startDate').value,
-            progress: parseInt(document.getElementById('taskProgress').value) || 0
+            title: title,
+            user: user,
+            priority: priority,
+            start: start,
+            progress: progress,
+            timestamp: Date.now()
         };
     
-        if (!taskData.title) return alert("請輸入名稱");
-    
         if (id) {
-            // 更新資料
+            // 更新 (這裡要確認你有 import update)
             update(ref(db, `tasks/${id}`), taskData);
         } else {
-            // 新增資料
-            push(dbRef, { ...taskData, timestamp: Date.now() });
+            // 新增
+            push(dbRef, taskData);
         }
-        toggleModal();
+        window.toggleModal(); // 儲存完關閉
     };
 
   // 1. 新增任務到雲端
