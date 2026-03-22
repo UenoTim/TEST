@@ -301,14 +301,13 @@
                 </div>
     
                 <div class="px-5 pb-5 text-sm text-slate-600 border-t border-slate-50">
-                    <div class="flex items-center justify-between mb-2 px-1">
                         <h3 class="text-[20px] font-black text-slate-800 mb-3 mt-4 pl-3 border-l-2 border-slate-200">
                             ${task.title}
                         </h3>
+                    <div class="flex items-center justify-between mb-2 px-1">
                         <span class="text-[14px] font-bold text-slate-500 justify-end">🔥 已衝刺 ${days} 天</span>
                         <span class="text-xs font-bold text-blue-600">${task.progress || 0}%</span>
                     </div>
-                   
                     <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                         <div class="bg-blue-500 h-full rounded-full transition-all duration-500" 
                              style="width: ${task.progress || 0}%">
