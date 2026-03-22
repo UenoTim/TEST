@@ -35,7 +35,87 @@
             <a href="#day10" class="px-5 py-2 bg-white text-slate-600 rounded-xl text-xs font-bold border border-slate-200 transition-all shrink-0">2/6</a>
         </div>
     </nav>
+    <style>
+        <button id="fab" onclick="toggleModal()">+</button>
 
+<div id="taskModal" class="modal">
+    <div class="modal-content">
+        <h3>✨ 新增進度任務</h3>
+        <input type="text" id="taskTitle" placeholder="任務名稱 (如：碩考複習)">
+        
+        <div class="form-group">
+            <label>執行者：</label>
+            <select id="taskUser">
+                <option value="曜廷">曜廷</option>
+                <option value="同學">同學</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>緊急程度：</label>
+            <select id="taskPriority">
+                <option value="high">🔴 高 (High)</option>
+                <option value="medium">🟡 中 (Medium)</option>
+                <option value="low">🟢 低 (Low)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>開始日期：</label>
+            <input type="date" id="startDate">
+        </div>
+
+        <div class="modal-buttons">
+            <button onclick="toggleModal()" style="background:#666;">取消</button>
+            <button onclick="handleSave()" style="background:#007bff;">儲存任務</button>
+        </div>
+    </div>
+</div>
+        /* 右下角加號按鈕 */
+        #fab {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            font-size: 30px;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 999;
+            transition: transform 0.2s;
+        }
+        #fab:hover { transform: scale(1.1); }
+        
+        /* 彈出視窗背景 */
+        .modal {
+            display: none; /* 平常隱藏 */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px); /* 毛玻璃效果 */
+            z-index: 1000;
+        }
+        
+        /* 視窗主體 */
+        .modal-content {
+            background: #2a2a2a;
+            width: 90%;
+            max-width: 400px;
+            margin: 15% auto;
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .form-group { margin: 15px 0; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 10px; border: none; border-radius: 5px; color: white; cursor: pointer; }
+    </style>
     <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -112,6 +192,19 @@
               <div class="progress-bar"><div class="progress-fill" style="width:${task.progress}%"></div></div>
           </div>
       `;
+  }
+    // 切換彈出視窗開關
+  function toggleModal() {
+        const modal = document.getElementById('taskModal');
+        modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
+        // 每次打開預設日期為今天
+        document.getElementById('startDate').valueAsDate = new Date();
+  }
+
+// 點擊「儲存」時呼叫你原本的 Firebase push 邏輯
+  function handleSave() {
+        window.addNewTask(); // 呼叫你原本寫在 Firebase 那邊的 function
+        toggleModal(); // 存完後關閉視窗
   }
 </script>
     <div style="background: #333; padding: 20px; margin: 10px; border-radius: 8px;">
