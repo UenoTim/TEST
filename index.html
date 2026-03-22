@@ -69,7 +69,7 @@
     
             <div class="modal-buttons">
                 <button onclick="toggleModal()" style="background:#666;">取消</button>
-                <button id="saveBtn" onclick="handleSave()" style="background:#007bff;">儲存任務</button>
+                <button onclick="window.toggleModal()" style="background:#666;">取消</button>
             </div>
         </div>
     </div>
@@ -146,9 +146,9 @@
     // 修正：確保全域都能抓到 toggleModal
     window.toggleModal = function() {
         const modal = document.getElementById('taskModal');
-        // 如果是打開，就順便重設成「新增模式」
-        if (modal.style.display !== 'block') {
-            window.openModal(); // 呼叫下面那個 openModal
+        // 如果目前是隱藏的，就打開它
+        if (modal.style.display === 'none' || modal.style.display === '') {
+            window.openModal(); // 這會觸發重設為「新增模式」
         } else {
             modal.style.display = 'none';
         }
@@ -181,8 +181,6 @@
         }
         modal.style.display = 'block';
     };
-    
-    window.toggleModal = () => document.getElementById('taskModal').style.display = 'none';
 
 // 統一儲存入口
     window.handleSave = function() {
